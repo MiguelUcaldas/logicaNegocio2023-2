@@ -10,3 +10,7 @@ export * from './calificacion-conductor.controller';
 export * from './calificacion-cliente.controller';
 export * from './conductor-vehiculo.controller';
 export * from './conductor-licencia.controller';
+export * from './viaje-conductor.controller';
+export * from './conductor-viaje.controller';
+export * from './viaje-cliente.controller';
+export * from './cliente-viaje.controller';

@@ -1,9 +1,10 @@
 import {inject, Getter} from '@loopback/core';
-import {DefaultCrudRepository, repository, BelongsToAccessor} from '@loopback/repository';
+import {DefaultCrudRepository, repository, BelongsToAccessor, HasManyRepositoryFactory} from '@loopback/repository';
 import {MysqlDataSource} from '../datasources';
-import {Conductor, ConductorRelations, Vehiculo, Licencia} from '../models';
+import {Conductor, ConductorRelations, Vehiculo, Licencia, Viaje} from '../models';
 import {VehiculoRepository} from './vehiculo.repository';
 import {LicenciaRepository} from './licencia.repository';
+import {ViajeRepository} from './viaje.repository';
 
 export class ConductorRepository extends DefaultCrudRepository<
   Conductor,
@@ -15,10 +16,14 @@ export class ConductorRepository extends DefaultCrudRepository<
 
   public readonly licencia: BelongsToAccessor<Licencia, typeof Conductor.prototype.id>;
 
+  public readonly viajes: HasManyRepositoryFactory<Viaje, typeof Conductor.prototype.id>;
+
   constructor(
-    @inject('datasources.mysql') dataSource: MysqlDataSource, @repository.getter('VehiculoRepository') protected vehiculoRepositoryGetter: Getter<VehiculoRepository>, @repository.getter('LicenciaRepository') protected licenciaRepositoryGetter: Getter<LicenciaRepository>,
+    @inject('datasources.mysql') dataSource: MysqlDataSource, @repository.getter('VehiculoRepository') protected vehiculoRepositoryGetter: Getter<VehiculoRepository>, @repository.getter('LicenciaRepository') protected licenciaRepositoryGetter: Getter<LicenciaRepository>, @repository.getter('ViajeRepository') protected viajeRepositoryGetter: Getter<ViajeRepository>,
   ) {
     super(Conductor, dataSource);
+    this.viajes = this.createHasManyRepositoryFactoryFor('viajes', viajeRepositoryGetter,);
+    this.registerInclusionResolver('viajes', this.viajes.inclusionResolver);
     this.licencia = this.createBelongsToAccessorFor('licencia', licenciaRepositoryGetter,);
     this.registerInclusionResolver('licencia', this.licencia.inclusionResolver);
     this.vehiculo = this.createBelongsToAccessorFor('vehiculo', vehiculoRepositoryGetter,);
