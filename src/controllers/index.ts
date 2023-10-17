@@ -14,3 +14,5 @@ export * from './viaje-conductor.controller';
 export * from './conductor-viaje.controller';
 export * from './viaje-cliente.controller';
 export * from './cliente-viaje.controller';
+export * from './vehiculo-conductor.controller';
+export * from './licencia-conductor.controller';
