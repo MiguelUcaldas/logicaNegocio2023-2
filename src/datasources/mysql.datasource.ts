@@ -5,11 +5,11 @@ const config = {
   name: 'mysql',
   connector: 'mysql',
   url: '',
-  host: '',
-  port: 0,
-  user: '',
-  password: '',
-  database: ''
+  host: 'localhost',
+  port: 3306,
+  user: 'root',
+  password: 'algopersonal',
+  database: 'UrbanNav'
 };
 
 // Observe application's life cycle to disconnect the datasource when
