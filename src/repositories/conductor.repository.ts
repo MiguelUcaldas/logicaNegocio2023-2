@@ -1,11 +1,12 @@
 import {inject, Getter} from '@loopback/core';
 import {DefaultCrudRepository, repository, BelongsToAccessor, HasManyRepositoryFactory} from '@loopback/repository';
 import {MysqlDataSource} from '../datasources';
-import {Conductor, ConductorRelations, Vehiculo, Licencia, Viaje, Parada} from '../models';
+import {Conductor, ConductorRelations, Vehiculo, Licencia, Viaje, Parada, CalificacionConductor} from '../models';
 import {VehiculoRepository} from './vehiculo.repository';
 import {LicenciaRepository} from './licencia.repository';
 import {ViajeRepository} from './viaje.repository';
 import {ParadaRepository} from './parada.repository';
+import {CalificacionConductorRepository} from './calificacion-conductor.repository';
 
 export class ConductorRepository extends DefaultCrudRepository<
   Conductor,
@@ -21,10 +22,14 @@ export class ConductorRepository extends DefaultCrudRepository<
 
   public readonly paradaConductor: BelongsToAccessor<Parada, typeof Conductor.prototype.id>;
 
+  public readonly calificacionConductors: HasManyRepositoryFactory<CalificacionConductor, typeof Conductor.prototype.id>;
+
   constructor(
-    @inject('datasources.mysql') dataSource: MysqlDataSource, @repository.getter('VehiculoRepository') protected vehiculoRepositoryGetter: Getter<VehiculoRepository>, @repository.getter('LicenciaRepository') protected licenciaRepositoryGetter: Getter<LicenciaRepository>, @repository.getter('ViajeRepository') protected viajeRepositoryGetter: Getter<ViajeRepository>, @repository.getter('ParadaRepository') protected paradaRepositoryGetter: Getter<ParadaRepository>,
+    @inject('datasources.mysql') dataSource: MysqlDataSource, @repository.getter('VehiculoRepository') protected vehiculoRepositoryGetter: Getter<VehiculoRepository>, @repository.getter('LicenciaRepository') protected licenciaRepositoryGetter: Getter<LicenciaRepository>, @repository.getter('ViajeRepository') protected viajeRepositoryGetter: Getter<ViajeRepository>, @repository.getter('ParadaRepository') protected paradaRepositoryGetter: Getter<ParadaRepository>, @repository.getter('CalificacionConductorRepository') protected calificacionConductorRepositoryGetter: Getter<CalificacionConductorRepository>,
   ) {
     super(Conductor, dataSource);
+    this.calificacionConductors = this.createHasManyRepositoryFactoryFor('calificacionConductors', calificacionConductorRepositoryGetter,);
+    this.registerInclusionResolver('calificacionConductors', this.calificacionConductors.inclusionResolver);
     this.paradaConductor = this.createBelongsToAccessorFor('paradaConductor', paradaRepositoryGetter,);
     this.registerInclusionResolver('paradaConductor', this.paradaConductor.inclusionResolver);
     this.viajes = this.createHasManyRepositoryFactoryFor('viajes', viajeRepositoryGetter,);

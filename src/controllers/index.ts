@@ -22,3 +22,8 @@ export * from './cliente-parada.controller';
 export * from './parada-cliente.controller';
 export * from './conductor-parada.controller';
 export * from './parada-conductor.controller';
+export * from './factura-viaje.controller';
+export * from './calificacion-cliente-cliente.controller';
+export * from './cliente-calificacion-cliente.controller';
+export * from './calificacion-conductor-conductor.controller';
+export * from './conductor-calificacion-conductor.controller';

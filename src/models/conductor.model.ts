@@ -3,6 +3,7 @@ import {Vehiculo} from './vehiculo.model';
 import {Licencia} from './licencia.model';
 import {Viaje} from './viaje.model';
 import {Parada} from './parada.model';
+import {CalificacionConductor} from './calificacion-conductor.model';
 
 @model()
 export class Conductor extends Entity {
@@ -63,6 +64,9 @@ export class Conductor extends Entity {
 
   @belongsTo(() => Parada, {name: 'paradaConductor'})
   paradaId: number;
+
+  @hasMany(() => CalificacionConductor)
+  calificacionConductors: CalificacionConductor[];
 
   constructor(data?: Partial<Conductor>) {
     super(data);
