@@ -8,3 +8,5 @@ export * from './factura.controller';
 export * from './viaje.controller';
 export * from './calificacion-conductor.controller';
 export * from './calificacion-cliente.controller';
+export * from './conductor-vehiculo.controller';
+export * from './conductor-licencia.controller';
