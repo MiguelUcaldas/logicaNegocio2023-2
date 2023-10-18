@@ -1,7 +1,7 @@
-import {Entity, model, property, hasMany} from '@loopback/repository';
-import {Viaje} from './viaje.model';
+import {Entity, hasMany, model, property} from '@loopback/repository';
 import {Cliente} from './cliente.model';
 import {Conductor} from './conductor.model';
+import {Viaje} from './viaje.model';
 
 @model()
 export class Parada extends Entity {
@@ -17,6 +17,12 @@ export class Parada extends Entity {
     required: true,
   })
   nombre: string;
+
+  @property({
+    type: 'string',
+    required: true,
+  })
+  clave: string;
 
   @hasMany(() => Viaje)
   viajes: Viaje[];

@@ -11,12 +11,6 @@ export class CalificacionConductor extends Entity {
   id?: number;
 
   @property({
-    type: 'number',
-    required: true,
-  })
-  puntuacion: number;
-
-  @property({
     type: 'date',
     required: true,
   })
