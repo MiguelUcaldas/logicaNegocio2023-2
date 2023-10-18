@@ -21,6 +21,8 @@ export class CalificacionConductor extends Entity {
   })
   comentario?: string;
 
+
+
   @belongsTo(() => Conductor)
   conductorId: number;
 

@@ -5,6 +5,12 @@ import {Viaje} from './viaje.model';
 
 @model()
 export class Parada extends Entity {
+  findOne(arg0: {where: {clave: string;};}) {
+    throw new Error('Method not implemented.');
+  }
+  findByOne(arg0: {where: {};}) {
+    throw new Error('Method not implemented.');
+  }
   @property({
     type: 'number',
     id: true,

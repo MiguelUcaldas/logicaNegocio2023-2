@@ -12,11 +12,6 @@ export class Viaje extends Entity {
   })
   id?: number;
 
-  @property({
-    type: 'boolean',
-    required: true,
-  })
-  estado: boolean;
 
   @belongsTo(() => Conductor)
   conductorId: number;

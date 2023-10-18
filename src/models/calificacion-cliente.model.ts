@@ -27,6 +27,9 @@ export class CalificacionCliente extends Entity {
   })
   comentario?: string;
 
+
+
+
   @belongsTo(() => Cliente)
   clienteId: number;
 

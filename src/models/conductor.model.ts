@@ -49,6 +49,12 @@ export class Conductor extends Entity {
   bloqueo: boolean;
 
   @property({
+    type: 'boolean',
+    required: true,
+  })
+  disponible: boolean;
+
+  @property({
     type: 'string',
   })
   comentarioBloqueo?: string;

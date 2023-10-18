@@ -7,3 +7,4 @@ export * from './factura.model';
 export * from './viaje.model';
 export * from './calificacion-conductor.model';
 export * from './calificacion-cliente.model';
+export * from './solicitar-viaje.model';
