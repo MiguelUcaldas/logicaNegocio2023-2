@@ -1,0 +1,86 @@
+caminoMasCorto(origen: string, destino: string): void {
+let verticesAux: string[] = [];
+let verticesD: string[] = [];
+let caminos: number[] = this.dijkstra(origen, verticesAux);
+let cont: number = 0;
+
+for (let i of caminos) {
+console.log("La distancia mínima a " + this.Lstvertices[cont].getDato() + " es " + i);
+cont += 1;
+}
+
+this.rutas(verticesD, verticesAux, destino, origen);
+console.log("El camino más corto de " + origen + " a " + destino + " es:");
+console.log(verticesD);
+}
+
+rutas(verticesD: string[], verticesAux: string[], destino: string, origen: string): void {
+let verticeDestino = this.obtenerVertice(destino);
+let indice = this.Lstvertices.indexOf(verticeDestino!);
+
+if (verticesAux[indice] === null) {
+console.log("No hay camino entre: ", [origen, destino]);
+return;
+}
+
+let aux = destino;
+while (aux !== origen) {
+verticeDestino = this.obtenerVertice(aux);
+indice = this.Lstvertices.indexOf(verticeDestino!);
+verticesD.unshift(aux);
+aux = verticesAux[indice];
+}
+verticesD.unshift(aux);
+}
+
+class Grafo {
+    listaVertices: Vertice[]; // Asegúrate de tener la definición correcta de la clase Vertice
+
+    todosVisitados(visitados: boolean[]): boolean {
+        for (let vertice of visitados) {
+            if (!vertice) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    menorNoVisitado(caminos: number[], visitados: boolean[]): Vertice | null {
+        let verticeMenor: Vertice | null = null;
+        let caminosAux: number[] = caminos.slice().sort((a, b) => a - b); // de menor a mayor
+        let copiaCaminos: number[] = caminos.slice();
+        let bandera: boolean = true;
+        let cont: number = 0;
+
+        while (bandera) {
+            let menor: number = caminosAux[cont];
+
+            if (!visitados[copiaCaminos.indexOf(menor)]) {
+                verticeMenor = this.listaVertices[copiaCaminos.indexOf(menor)];
+                bandera = false;
+            } else {
+                copiaCaminos[copiaCaminos.indexOf(menor)] = -1; // Marcamos el camino como visitado
+                cont += 1;
+            }
+        }
+
+        return verticeMenor;
+    }
+}
+
+// Suponiendo que tienes una clase Vertice en tu clase Grafo
+class Vertice {
+    // Implementación de la clase Vertice
+    // ...
+}
+
+// Uso de la clase Grafo
+const grafo = new Grafo();
+const visitados: boolean[] = [true, false, true]; // Ejemplo de array de visitados
+const resultadoTodosVisitados: boolean = grafo.todosVisitados(visitados);
+console.log("Todos visitados:", resultadoTodosVisitados);
+
+const caminos: number[] = [3, 1, 5, 2]; // Ejemplo de array de caminos
+const resultadoMenorNoVisitado: Vertice | null = grafo.menorNoVisitado(caminos, visitados);
+console.log("Menor no visitado:", resultadoMenorNoVisitado);
+

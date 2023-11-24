@@ -9,6 +9,9 @@ import {RestApplication} from '@loopback/rest';
 import {ServiceMixin} from '@loopback/service-proxy';
 import path from 'path';
 import {MySequence} from './sequence';
+import {AuthStrategy} from './auth/strategy';
+import { AuthenticationComponent, registerAuthenticationStrategy } from '@loopback/authentication';
+
 
 export {ApplicationConfig};
 
@@ -40,5 +43,17 @@ export class App extends BootMixin(
         nested: true,
       },
     };
+
+    /**implementando la estrategia de autentificacion de loopback
+     * mediante el metodo registerAuthenticationStrategy
+     * realizando un llamado a la clase AuthStrategy
+     * en el contructor de la clase App, this significa la clase App
+     * y AuthStrategy es la clase que se va a ejecutar, ademas el autentiactionComponent
+     * sirve para que se ejecute la estrategia de autentificacion mediante el metodo authenticate
+     */
+
+    registerAuthenticationStrategy(this, AuthStrategy);
+    this.component(AuthenticationComponent)
+
   }
 }

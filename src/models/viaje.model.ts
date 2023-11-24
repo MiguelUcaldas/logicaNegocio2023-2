@@ -1,6 +1,6 @@
-import {Entity, model, property, belongsTo} from '@loopback/repository';
-import {Conductor} from './conductor.model';
+import {Entity, belongsTo, model, property} from '@loopback/repository';
 import {Cliente} from './cliente.model';
+import {Conductor} from './conductor.model';
 import {Parada} from './parada.model';
 
 @model()
@@ -11,6 +11,12 @@ export class Viaje extends Entity {
     generated: true,
   })
   id?: number;
+
+  @property({
+    type: "boolean",
+
+  })
+  estado?: boolean;
 
 
   @belongsTo(() => Conductor)

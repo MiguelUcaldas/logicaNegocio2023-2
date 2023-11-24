@@ -1,3 +1,4 @@
+import {service} from '@loopback/core';
 import {
   Count,
   CountSchema,
@@ -7,36 +8,38 @@ import {
   Where,
 } from '@loopback/repository';
 import {
-  post,
-  param,
+  del,
   get,
   getModelSchemaRef,
+  param,
   patch,
+  post,
   put,
-  del,
   requestBody,
   response,
 } from '@loopback/rest';
-import { CalificacionCliente, CalificacionCliente, CalificacionConductor, SolicitarViaje, Viaje} from '../models';
-import {ClienteRepository, ParadaRepository, ViajeRepository} from '../repositories';
-import {service} from '@loopback/core';
-import {ServiciosLogicaNegocioService} from '../services';
+import {Graph} from '../graph/graph';
+import {CalificacionCliente, CalificacionConductor, SolicitarViaje, Viaje} from '../models';
+import {CalificacionClienteRepository, CalificacionConductorRepository, ClienteRepository, ParadaRepository, ViajeRepository} from '../repositories';
+import {GraphService, ServiciosLogicaNegocioService} from '../services';
 
 export class ViajeController {
   constructor(
     @repository(ViajeRepository)
-    public viajeRepository : ViajeRepository,
+    public viajeRepository: ViajeRepository,
     @service(ServiciosLogicaNegocioService)
-    public servicios : ServiciosLogicaNegocioService,
+    public servicioLogicaNegocio: ServiciosLogicaNegocioService,
     @repository(ParadaRepository)
-    public paradaRepository : ParadaRepository,
+    public paradaRepository: ParadaRepository,
     @repository(ClienteRepository)
-    public clienteRepository : ClienteRepository,
-    @repository(CalificacionCliente)
-    public calificacionClienteRepository : CalificacionCliente,
-    @repository(CalificacionConductor)
-    public calificacionConductorRepository : CalificacionConductor,
-  ) {}
+    public clienteRepository: ClienteRepository,
+    @repository(CalificacionClienteRepository)
+    public calificacionClienteRepository: CalificacionClienteRepository,
+    @repository(CalificacionConductorRepository)
+    public calificacionConductorRepository: CalificacionConductorRepository,
+    @service(GraphService)
+    public servicioGrafo: GraphService,
+  ) { }
 
   @post('/viajes')
   @response(200, {
@@ -59,7 +62,8 @@ export class ViajeController {
     return this.viajeRepository.create(viaje);
   }
 
-  @get('/viajes/count')
+
+
   @response(200, {
     description: 'Viaje model count',
     content: {'application/json': {schema: CountSchema}},
@@ -160,6 +164,12 @@ export class ViajeController {
     await this.viajeRepository.deleteById(id);
   }
 
+  // crear metodo post para solicitar un viaje y crear el grafo
+  // denytro del método, crear una instancia de la clase graph
+  // asignarñe a ña propiedad nodos de ese grafo la lista de nodos que retorna el método cargarNodos
+  // luego con ese grafo, se le pasa como parametro al cargar aristas, y allá se manipual ese grafo y se agregan las aristas cargadas
+  // imprimir grafo  @get('/viajes/count')
+
   // metodo post para solicitar un viaje haciendo llamado al modelo SolicitarViaje
   @post('/viajes/solicitarViaje')
   @response(200, {
@@ -175,37 +185,48 @@ export class ViajeController {
       },
     })
     viaje: SolicitarViaje,
-  ): Promise <Viaje> {
+  ): Promise<Viaje> {
 
     let cliente = await this.clienteRepository.findById(viaje.idCliente);
-
     let origen = await this.paradaRepository.findById(cliente.paradaId);
     let destino = await this.paradaRepository.findById(viaje.destino);
-    let conductor = await this.servicios.AsignarConductor(origen);
+    let conductor = await this.servicioLogicaNegocio.AsignarConductor(origen);
+    let vertices = await this.servicioGrafo.cargarNodos();
+    let aristas = await this.servicioGrafo.cargarAristas();
 
+    let grafo = new Graph(vertices, aristas);
+    grafo.cargarAdyacencias();
+    let pesoTotal = grafo.caminoMasCorto(origen.clave, destino.clave);
+    console.log("La distancia total recorrida es: " + pesoTotal+" Km")
+
+
+    /*
+    //imprime los vertices y aristas
+    grafo.Lstvertices.forEach(v => {
+      console.log(v.getDato() + " = " + v.getNombre() + " Adyacencias = [ " + v.getAdyacencias() + " ]")
+    })
+    grafo.Lstaristas.forEach(a => {
+      console.log(" Origen= (" + a.getOrigen() + ") Destino= (" + a.getDestino() + ") Peso= " + a.getPeso())
+    })
+*/
 
     //si todas las variables contienen datos se crea el viaje
-    if (cliente && origen && destino && conductor){
+    if (cliente && origen && destino && conductor) {
 
       let viajeCompleto = new Viaje();
       // aqui se usa exclamacion porque se sabe que conductor no es null
       viajeCompleto.clienteId = cliente.id!;
       viajeCompleto.conductorId = conductor.id!;
       viajeCompleto.paradaId = destino.id!;
-
-      let calificacionCliente = new CalificacionCliente();
-      let calificacionConductor = new CalificacionConductor();
-
-      calificacionCliente.clienteId = cliente.id!;
-      calificacionCliente.conductorId = conductor.id!;
+      viajeCompleto.estado = true;
 
       return this.viajeRepository.create(viajeCompleto);
 
-
     }
-    else{
+    else {
       throw new Error("No se pudo crear el viaje");
     }
+
 
   }
 

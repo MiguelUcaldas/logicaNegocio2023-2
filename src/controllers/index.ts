@@ -25,3 +25,8 @@ export * from './calificacion-cliente-cliente.controller';
 export * from './cliente-calificacion-cliente.controller';
 export * from './calificacion-conductor-conductor.controller';
 export * from './conductor-calificacion-conductor.controller';
+export * from './calificacion-cliente-conductor.controller';
+export * from './conductor-calificacion-cliente.controller';
+export * from './calificacion-conductor-cliente.controller';
+export * from './cliente-calificacion-conductor.controller';
+export * from './distancia.controller';

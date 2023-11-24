@@ -4,18 +4,16 @@ import {Model, model, property} from '@loopback/repository';
 export class SolicitarViaje extends Model {
   @property({
     type: 'number',
+    required: true,
   })
-  idCliente?: number;
+  idCliente: number;
+
 
   @property({
     type: 'number',
+    required: true,
   })
-  idConductor?: number;
-
-  @property({
-    type: 'number',
-  })
-  destino?: number;
+  destino: number;
 
 
   constructor(data?: Partial<SolicitarViaje>) {

@@ -7,3 +7,4 @@ export * from './licencia.repository';
 export * from './parada.repository';
 export * from './vehiculo.repository';
 export * from './viaje.repository';
+export * from './distancia.repository';

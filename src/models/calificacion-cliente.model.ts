@@ -1,8 +1,12 @@
 import {Entity, model, property, belongsTo} from '@loopback/repository';
 import {Cliente} from './cliente.model';
+import {Conductor} from './conductor.model';
 
 @model()
 export class CalificacionCliente extends Entity {
+  create(calificacionCliente: CalificacionCliente) {
+    throw new Error('Method not implemented.');
+  }
   @property({
     type: 'number',
     id: true,
@@ -12,15 +16,14 @@ export class CalificacionCliente extends Entity {
 
   @property({
     type: 'number',
-    required: true,
+
   })
-  puntuacion: number;
+  puntuacion?: number;
 
   @property({
     type: 'date',
-    required: true,
   })
-  fecha: string;
+  fecha?: string;
 
   @property({
     type: 'string',
@@ -32,6 +35,9 @@ export class CalificacionCliente extends Entity {
 
   @belongsTo(() => Cliente)
   clienteId: number;
+
+  @belongsTo(() => Conductor)
+  conductorId: number;
 
   constructor(data?: Partial<CalificacionCliente>) {
     super(data);

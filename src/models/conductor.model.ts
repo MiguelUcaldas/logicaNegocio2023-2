@@ -4,6 +4,7 @@ import {Licencia} from './licencia.model';
 import {Viaje} from './viaje.model';
 import {Parada} from './parada.model';
 import {CalificacionConductor} from './calificacion-conductor.model';
+import {CalificacionCliente} from './calificacion-cliente.model';
 
 @model()
 export class Conductor extends Entity {
@@ -73,6 +74,9 @@ export class Conductor extends Entity {
 
   @hasMany(() => CalificacionConductor)
   calificacionConductors: CalificacionConductor[];
+
+  @hasMany(() => CalificacionCliente)
+  calificacionClientes: CalificacionCliente[];
 
   constructor(data?: Partial<Conductor>) {
     super(data);

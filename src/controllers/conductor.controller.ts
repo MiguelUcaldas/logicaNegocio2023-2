@@ -17,7 +17,7 @@ import {
   requestBody,
   response,
 } from '@loopback/rest';
-import {Conductor} from '../models';
+import {Conductor, ConductoresDisponibles} from '../models';
 import {ConductorRepository} from '../repositories';
 
 export class ConductorController {
@@ -147,4 +147,32 @@ export class ConductorController {
   async deleteById(@param.path.number('id') id: number): Promise<void> {
     await this.conductorRepository.deleteById(id);
   }
+
+  //metodo
+
+  @post('/conductoresDisponibles')
+  @response(200, {
+    description: 'Conductor model instance',
+    content: {'application/json': {schema: getModelSchemaRef(Conductor)}},
+  })
+  async createDisponibles(
+    @requestBody({
+      content: {
+        'application/json': {
+          schema: getModelSchemaRef(ConductoresDisponibles),
+        },
+      },
+    })
+    conductoresDisponibles: ConductoresDisponibles,
+  ): Promise<Conductor[]> {
+    let conductores = await this.conductorRepository.find({
+      where:{
+        paradaId: conductoresDisponibles.parada,
+
+      }
+    });
+    return conductores;
+  }
+
 }
+
